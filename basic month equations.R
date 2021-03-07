@@ -12,14 +12,14 @@
 
 # This model will work on a monthly basis, so all values (repayment_threshold, salary, etc.) are monthly values.
 # gross salary above which 9% repayments are made
-repayment_threshold <- 26575/12
+REPAYMENT_THRESHOLD <- 26575/12
 
 # gross salary
-salary <- 3500
+SALARY <- 3500
 
 #specify the minimum monthly repayment for specified salary
-if (salary >= repayment_threshold) {
-  min_repayment <- 0.09*(salary - repayment_threshold)
+if (SALARY >= REPAYMENT_THRESHOLD) {
+  min_repayment <- 0.09*(SALARY - REPAYMENT_THRESHOLD)
 } else {min_repayment = 0}
 
 
@@ -35,17 +35,17 @@ if (salary >= repayment_threshold) {
 # Over £47,835: RPI + 3%
 
 #Specify the interest_rate thresholds
-min_interest_threshold = 26575/12
-max_interest_threshold = 47835/12
+MIN_INTEREST_THRESHOLD = 26575/12
+MAX_INTEREST_THRESHOLD = 47835/12
 
 # Specify RPI for the 2020-2021 tax year
 RPI = 0.026
 
 # find interest rate, given salary, RPI, and min and max interest thresholds
-if (salary <= min_interest_threshold) {
+if (SALARY <= MIN_INTEREST_THRESHOLD) {
   nominal_annual_interest_rate <- RPI
-} else if (min_interest_threshold < salary & salary < max_interest_threshold) {
-  nominal_annual_interest_rate <-  RPI + 0.03*(salary - min_interest_threshold)/(max_interest_threshold - min_interest_threshold)
+} else if (MIN_INTEREST_THRESHOLD < SALARY & SALARY < MAX_INTEREST_THRESHOLD) {
+  nominal_annual_interest_rate <-  RPI + 0.03*(SALARY - MIN_INTEREST_THRESHOLD)/(MAX_INTEREST_THRESHOLD - MIN_INTEREST_THRESHOLD)
 } else {
   nominal_annual_interest_rate <- RPI + 0.03
 }
@@ -59,12 +59,12 @@ if (salary <= min_interest_threshold) {
 # IFS research suggests £50,800. https://www.bbc.co.uk/news/education-40493658
 # I will go half-way and set default debt to £45000
 # set total debt. 
-debt <- 45000
+DEBT <- 45000
 
 # monthly interest rate != annual rate/12. If we used this, the monthly interest would compound more quickly, leading to a higher annual rate.
 # instead, use (1 + annual_rate)^(1/12) - 1
 monthly_interest_rate <- ((1 + nominal_annual_interest_rate)^(1/12) - 1)
-interest_growth <- debt * monthly_interest_rate
+interest_growth <- DEBT * monthly_interest_rate
 
 
 ### Monthly change in debt
