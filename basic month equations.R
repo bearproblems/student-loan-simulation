@@ -15,11 +15,11 @@
 REPAYMENT_THRESHOLD <- 26575/12
 
 # gross salary
-SALARY <- 3500
+Salary <- 3500
 
 #specify the minimum monthly repayment for specified salary
-if (SALARY >= REPAYMENT_THRESHOLD) {
-  min_repayment <- 0.09*(SALARY - REPAYMENT_THRESHOLD)
+if (Salary >= REPAYMENT_THRESHOLD) {
+  min_repayment <- 0.09*(Salary - REPAYMENT_THRESHOLD)
 } else {min_repayment = 0}
 
 
@@ -42,15 +42,28 @@ MAX_INTEREST_THRESHOLD = 47835/12
 RPI = 0.026
 
 # find interest rate, given salary, RPI, and min and max interest thresholds
-if (SALARY <= MIN_INTEREST_THRESHOLD) {
-  nominal_annual_interest_rate <- RPI
-} else if (MIN_INTEREST_THRESHOLD < SALARY & SALARY < MAX_INTEREST_THRESHOLD) {
-  nominal_annual_interest_rate <-  RPI + 0.03*(SALARY - MIN_INTEREST_THRESHOLD)/(MAX_INTEREST_THRESHOLD - MIN_INTEREST_THRESHOLD)
+if (Salary <= MIN_INTEREST_THRESHOLD) {
+  nominal_interest_rate <- RPI
+} else if (MIN_INTEREST_THRESHOLD < Salary & Salary < MAX_INTEREST_THRESHOLD) {
+  nominal_interest_rate <-  RPI + 0.03*(Salary - MIN_INTEREST_THRESHOLD)/(MAX_INTEREST_THRESHOLD - MIN_INTEREST_THRESHOLD)
 } else {
-  nominal_annual_interest_rate <- RPI + 0.03
+  nominal_interest_rate <- RPI + 0.03
 }
 
 
+# Alternate version, finds interest over RPI and includes an optional RPI adjustment
+RPI_adjustment <- 0.75
+
+if (Salary <= MIN_INTEREST_THRESHOLD) {
+  interest_over_RPI <- 0
+} else if (MIN_INTEREST_THRESHOLD < Salary & Salary < MAX_INTEREST_THRESHOLD) {
+  interest_over_RPI <- 0.03*(Salary - MIN_INTEREST_THRESHOLD)/(MAX_INTEREST_THRESHOLD - MIN_INTEREST_THRESHOLD)
+} else {
+  interest_over_RPI <- 0.03
+}
+
+real_interest_rate <<- interest_over_RPI + RPI_adjustment*0.01
+real_interest_rate
 
 
 
@@ -59,13 +72,17 @@ if (SALARY <= MIN_INTEREST_THRESHOLD) {
 # IFS research suggests £50,800. https://www.bbc.co.uk/news/education-40493658
 # I will go half-way and set default debt to £45000
 # set total debt. 
-DEBT <- 45000
+Debt <- 45000
 
 # monthly interest rate != annual rate/12. If we used this, the monthly interest would compound more quickly, leading to a higher annual rate.
 # instead, use (1 + annual_rate)^(1/12) - 1
-monthly_interest_rate <- ((1 + nominal_annual_interest_rate)^(1/12) - 1)
-interest_growth <- DEBT * monthly_interest_rate
+monthly_nominal_interest_rate <- ((1 + nominal_interest_rate)^(1/12) - 1)
+nominal_interest_growth <- Debt * monthly_nominal_interest_rate
 
+
+# Alternate version, uses real_interest_rate instead of nominal_interest_rate
+monthly_real_interest_rate <- ((1 + real_interest_rate)^(1/12) - 1)
+real_interest_growth <- Debt * monthly_real_interest_rate
 
 ### Monthly change in debt
 
@@ -73,4 +90,5 @@ interest_growth <- DEBT * monthly_interest_rate
 actual_repayment <- min_repayment
 
 # monthly change in debt
-debt_change <- interest_growth - actual_repayment
+nominal_debt_change <- nominal_interest_growth - actual_repayment
+real_debt_change <- real_interest_growth - actual_repayment
