@@ -1,19 +1,7 @@
-# For now, assume constant compounding salary growth
-# default growth rate 2.2% a year
-# default 360 months / 30 years until loan writeoff
-
-find_salary_schedule <- function(starting_salary = Salary, salary_growth_rate = 0.022, months_until_writeoff = 360) {
-  salary_vector = starting_salary * exp(1) ^ ((1:months_until_writeoff - 1) * ((1 + salary_growth_rate) ^ (1/12) - 1))
-  return(salary_vector)
-}
+# Function defined in 'basic_functions_only'
 
 #  Run the function to make a salary schedule
 salary_schedule <- find_salary_schedule()
-
-
-
-
-
 
 #### Discussion 
 

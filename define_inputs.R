@@ -1,19 +1,24 @@
 # set parameters and define inputs
 
-# parameters
+# parameters: define general conditions to do with the state of the world.
+# note: RPI = AVERAGE RPI, in the long run: not now.
 REPAYMENT_THRESHOLD <- 26575/12
 MIN_INTEREST_THRESHOLD = 26575/12
 MAX_INTEREST_THRESHOLD = 47835/12
-MONTHS_UNTIL_WRITEOFF = 360
-RPI_ADJUSTMENT <- 0.75
-STARTING_DEBT <- 45000
 RPI = 0.026
+RPI_ADJUSTMENT <- 0.75
 
-# intermediate inputs
-Salary <- 3500
-Debt <- 45000
+# Inputs: define specific conditions for some person.
+Starting_Debt <- 45000
+Starting_Salary <- 3500
+Months_Until_Writeoff = 360
 
-# A possible naming convention:
-# True constants, which never change: all capitals. E.g. MAX_INTEREST_THRESHOLD
+# Advanced: prediction used in modeling salary trajectory
+Salary_Growth_Rate = 0.022
+
+
+# Naming convention:
+# "Parameters": Global values to do with the state of the world, which never change and are the same for many people: all capitals. E.g. MAX_INTEREST_THRESHOLD
+# "Inputs": User specific conditions that will be different for each person, but don't change as the simulation runs: first letter of each word capitalised, E.g. Starting_Salary
 # Variable inputs, which change but in endogenous ways we define: capital first letters. E.g. Salary
-# Outputs, which change in ways determined by calculations: all lower case, E.g. min_repayment
+# Intermediate inputs and outputs, which change in ways determined by calculations: all lower case, E.g. real_interest_growth

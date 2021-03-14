@@ -1,9 +1,13 @@
-# before running; 
-# run 'basic month functions', to set parameters and define key functions.
-# run 'salary_schedule' to create a monthly schedule of gross real pay.
+# before running
+# run 'define_inputs' to set parameters and user inputs
+# run 'basic month functions', to define key functions.
 
+# create a monthly schedule of gross real pay.
+salary_schedule <- find_salary_schedule(starting_salary = Starting_Salary, salary_growth_rate = Salary_Growth_Rate, months_until_writeoff = Months_Until_Writeoff)
+  
 #Setup the loop
 month <- 1
+debt <- Starting_Debt
 debt_series <- vector()
 repayment_series <- vector()
 interest_series <- vector()
@@ -11,35 +15,36 @@ month_series <- vector()
   
 # loop
   
-while (month <= MONTHS_UNTIL_WRITEOFF) {
+while (month <= Months_Until_Writeoff) {
   
   min_repayment <- find_min_repayment(salary = salary_schedule[month])
     
   real_interest_rate <- find_real_interest_rate(salary = salary_schedule[month], RPI_adjustment = RPI_ADJUSTMENT)
     
-  real_interest_growth <- find_real_interest_growth(real_interest_rate, Debt)         
+  real_interest_growth <- find_real_interest_growth(real_interest_rate, debt)         
     
     
   #If debt plus interest >= minimum repayment, pay minimum repayment.
   #Else repay debt plus interest
-  if (Debt + real_interest_growth >= min_repayment) {
+  if (debt + real_interest_growth >= min_repayment) {
     actual_repayment <- min_repayment} else {
-      actual_repayment <- Debt + real_interest_growth
+      actual_repayment <- debt + real_interest_growth
     }
     
     
-  debt_series <- c(debt_series, Debt) 
+  debt_series <- c(debt_series, debt) 
   repayment_series <- c(repayment_series, actual_repayment)
   interest_series <- c(interest_series, real_interest_growth)
   month_series <- c(month_series, month)
     
-  Debt <- Debt + real_interest_growth - actual_repayment
+  debt <- debt + real_interest_growth - actual_repayment
   month <- month + 1 
 }
   
 results <- data.frame(cbind(month_series, debt_series, repayment_series, interest_series, salary_schedule))
-  
-return(sum(repayment_series))
+rm(month_series, debt_series, repayment_series, interest_series)
+
+sum(results$repayment_series)
 
 
 
