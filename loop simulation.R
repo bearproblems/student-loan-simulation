@@ -42,7 +42,8 @@ while (month <= Months_Until_Writeoff) {
 }
   
 results <- data.frame(cbind(month_series, debt_series, repayment_series, interest_series, salary_schedule))
-rm(month_series, debt_series, repayment_series, interest_series)
+rm(month_series, debt_series, repayment_series, interest_series, salary_schedule)
+rm(actual_repayment, min_repayment, debt, month, real_interest_rate, real_interest_growth)
 
 sum(results$repayment_series)
 

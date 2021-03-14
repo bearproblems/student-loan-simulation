@@ -9,12 +9,12 @@ RPI = 0.026
 RPI_ADJUSTMENT <- 0.75
 
 # Inputs: define specific conditions for some person.
-Starting_Debt <- 45000
-Starting_Salary <- 3500
+Starting_Debt <- 43000
+Starting_Salary <- 4000
 Months_Until_Writeoff = 360
 
 # Advanced: prediction used in modeling salary trajectory
-Salary_Growth_Rate = 0.022
+Salary_Growth_Rate = 0.012
 
 
 # Naming convention:
