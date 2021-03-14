@@ -1,3 +1,112 @@
+# Option: Run this as a side script which works on all data in 'datasets' folder at once.
+# Save the results of a run so we don't have to run every time?
+
+# earnings and hours by age group
+# ONS ASHE, tables 6 https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/agegroupashetable6
+# saved in "datasets/PROV - Age Group Table 6.7a   Annual pay - Gross 2020.xls"
+
+# Install tidyverse
+# install.packages("tidyverse")
+library("tidyverse")
+
+# load data from ASHE table 6
+ons_raw_salaries <- readxl::read_excel("datasets/PROV - Age Group Table 6.7a   Annual pay - Gross 2020.xls", range = "All!A3:F13")
+
+# store the useful parts in a tibble
+ons_salaries <- tibble(
+  age <- unlist(ons_raw_salaries[5:9, 1]),
+  median_salary <- as.numeric(unlist(ons_raw_salaries[5:9, 4])),
+  mean_salary <- as.numeric(unlist(ons_raw_salaries[5:9, 6])),
+)
+
+colnames(ons_salaries) <- c("age", "median_salary", "mean_salary")
+
+
+# split age bands into min, max and average, and convert to numeric
+ons_salaries$age_min <- str_sub(ons_salaries$age, 1, 2) %>% as.numeric()
+
+ons_salaries <- ons_salaries %>% mutate(age_min = str_sub(age, 1, 2) %>% as.numeric(),
+                        age_max = str_sub(age, -2, -1) %>% as.numeric(),
+                        age_mid = (age_max + age_min)/2)
+
+age <- ons_salaries$age_mid
+median_salary <- ons_salaries$median_salary
+mean_salary <- ons_salaries$mean_salary
+
+
+
+
+##### Plot and fit a curve through the median and mean salaries
+# Code for this is adapted from https://davetang.org/muse/2013/05/09/on-curve-fitting/
+
+# make median_salary the predictor, and y the response variable
+plot(x=age, y=median_salary, pch = 19)
+
+# fit first degree polynomial equation:
+fit  <- lm(median_salary ~ age)
+#second degree
+fit2 <- lm(median_salary ~ poly(age, 2, raw=TRUE))
+#third degree
+fit3 <- lm(median_salary ~ poly(age, 3, raw=TRUE))
+#fourth degree
+fit4 <- lm(median_salary ~ poly(age, 4, raw=TRUE))
+
+
+#generate range of 50 numbers starting from 30 and ending at 160
+xx <- seq(15, 55, length=100)
+plot(x=age, y=median_salary, pch=19, ylim=c(0, 40000))
+lines(xx, predict(fit, data.frame(age=xx)), col="red")
+lines(xx, predict(fit2, data.frame(age=xx)), col="green")
+lines(xx, predict(fit3, data.frame(age=xx)), col="blue")
+lines(xx, predict(fit4, data.frame(age=xx)), col="purple")
+
+summary(fit4)
+
+
+
+### Repeat everything for mean_salary
+# make mean_salary the predictor, and y the response variable
+plot(x=age, y=mean_salary, pch = 19)
+
+# fit first degree polynomial equation:
+fit  <- lm(mean_salary ~ age)
+#second degree
+fit2 <- lm(mean_salary ~ poly(age, 2, raw=TRUE))
+#third degree
+fit3 <- lm(mean_salary ~ poly(age, 3, raw=TRUE))
+#fourth degree
+fit4 <- lm(mean_salary ~ poly(age, 4, raw=TRUE))
+
+
+#generate range of 50 numbers starting from 30 and ending at 160
+xx <- seq(15, 55, length=100)
+plot(x=age, y=mean_salary, pch=19, ylim=c(0, 40000))
+lines(xx, predict(fit, data.frame(age=xx)), col="red")
+lines(xx, predict(fit2, data.frame(age=xx)), col="green")
+lines(xx, predict(fit3, data.frame(age=xx)), col="blue")
+lines(xx, predict(fit4, data.frame(age=xx)), col="purple")
+
+summary(fit4)
+
+
+
+##### Converting to a monthly salary schedule
+# from age 20 to 55
+# Repayment countdown starts on April after finishing uni
+# For simplicity, I assume this starts at age 22.
+# This is only needed to know where on the curve to fit people.
+
+# Big assumption: Graduates follow a similar schedule to this.
+
+# Next steps: convert from years to months
+# Identify starting month (age 22)
+# Extract or derive the equation from the fitted polynomial
+# Use the equation to create a salary schedule
+# Scale based on starting salary to create salary schedule.
+# Sanity-check resulting schedule is sensible
+# Use resulting schedule as in the repayment simulator
+
+
 # Function defined in 'basic_functions_only'
 
 #  Run the function to make a salary schedule
