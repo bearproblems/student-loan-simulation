@@ -3,7 +3,7 @@
 # run 'basic month functions', to define key functions.
 
 # create a monthly schedule of gross real pay.
-salary_schedule <- find_salary_schedule(starting_salary = Starting_Salary, salary_growth_rate = Salary_Growth_Rate, months_until_writeoff = Months_Until_Writeoff)
+salary_schedule <- find_salary_schedule()
   
 #Setup the loop
 month <- 1

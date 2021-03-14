@@ -55,6 +55,21 @@ find_real_interest_rate <- function(salary = Starting_Salary, RPI_adjustment = R
 
 
 # Dan debt 43000
+# Starting salary 4000
+# Salary growth 1.2% (default 2.2%)
+
+# Plan 1
+# repay 215 a month at start
+# total repay: 40700 in today's money
+# total time: 13 years 10 months
+
+# Plan 2
+# repay 161 a month at start
+# total repay: 70555 in today's money
+# total time: 26 years 4 months
+
+
+# Dan debt 43000
 # Starting salary 2700
 
 # Plan 1
@@ -70,15 +85,16 @@ find_real_interest_rate <- function(salary = Starting_Salary, RPI_adjustment = R
 
 
 # Dan debt 43000
-# Starting salary 4000
-# Salary growth 1.2% (default 2.2%)
+# Starting salary 2700
+# Salary behaviour: derived from ASHE estimates of income curves (join curve at age 23)
 
 # Plan 1
-# repay 215 a month at start
-# total repay: 40700 in today's money
-# total time: 13 years 10 months
+# repay 98 a month at start
+# total repay: 440065 in today's money
+# total time: 16 years 8 months
 
 # Plan 2
-# repay 161 a month at start
-# total repay: 70555 in today's money
-# total time: 26 years 4 months
+# repay 44 a month at start (unchanged)
+# total repay: 56439 in today's money
+# total time: write off 23k after 30 years
+

@@ -27,15 +27,47 @@ ons_salaries$age_min <- str_sub(ons_salaries$age, 1, 2) %>% as.numeric()
 
 ons_salaries <- ons_salaries %>% mutate(age_min = str_sub(age, 1, 2) %>% as.numeric(),
                         age_max = str_sub(age, -2, -1) %>% as.numeric(),
-                        age_mid = (age_max + age_min)/2)
+                        age_mid = (age_max + age_min)/2,
+                        age_months = age_mid*12,
+                        month_median_salary = (1/12) * median_salary,
+                        month_mean_salary = (1/12) * mean_salary)
 
-age <- ons_salaries$age_mid
-median_salary <- ons_salaries$median_salary
-mean_salary <- ons_salaries$mean_salary
+age <- ons_salaries$age_months
+median_salary <- ons_salaries$month_median_salary
+mean_salary <- ons_salaries$month_mean_salary
 
 
 
 
+##### At the risk of overfitting, I will use the fourth degree polynomial, for the best fit of the data.
+# May revisit this in future.
+
+# fit third degree polynomial equation for median and mean:
+median_fit <- lm(median_salary ~ poly(age, 3, raw=TRUE))
+mean_fit <- lm(mean_salary ~ poly(age, 3, raw=TRUE))
+
+#generate range of 100 numbers starting from 0 and ending at 800
+xx <- seq(0, 800, length=100)
+plot(x=age, y=median_salary, pch=19, ylim=c(0, 3200))
+lines(xx, predict(median_fit, data.frame(age=xx)), col="orange")
+
+# same for mean fit
+xx <- seq(0, 800, length=100)
+plot(x=age, y=mean_salary, pch=19, ylim=c(0, 3200))
+lines(xx, predict(mean_fit, data.frame(age=xx)), col="orange")
+
+summary(median_fit)
+
+
+
+
+
+
+
+
+
+
+###### Testing which fit to use 
 ##### Plot and fit a curve through the median and mean salaries
 # Code for this is adapted from https://davetang.org/muse/2013/05/09/on-curve-fitting/
 
@@ -53,45 +85,41 @@ fit4 <- lm(median_salary ~ poly(age, 4, raw=TRUE))
 
 
 #generate range of 50 numbers starting from 30 and ending at 160
-xx <- seq(15, 55, length=100)
-plot(x=age, y=median_salary, pch=19, ylim=c(0, 40000))
+xx <- seq(0, 800, length=100)
+plot(x=age, y=median_salary, pch=19, ylim=c(0, 35000))
 lines(xx, predict(fit, data.frame(age=xx)), col="red")
 lines(xx, predict(fit2, data.frame(age=xx)), col="green")
 lines(xx, predict(fit3, data.frame(age=xx)), col="blue")
-lines(xx, predict(fit4, data.frame(age=xx)), col="purple")
+lines(xx, predict(fit4, data.frame(age=xx)), col="orange")
 
 summary(fit4)
 
 
 
-### Repeat everything for mean_salary
-# make mean_salary the predictor, and y the response variable
-plot(x=age, y=mean_salary, pch = 19)
+##### To avoid overfitting, and for simplicity, I will use the third degree polynomial.
+# May revisit this in future.
 
-# fit first degree polynomial equation:
-fit  <- lm(mean_salary ~ age)
-#second degree
-fit2 <- lm(mean_salary ~ poly(age, 2, raw=TRUE))
-#third degree
-fit3 <- lm(mean_salary ~ poly(age, 3, raw=TRUE))
-#fourth degree
-fit4 <- lm(mean_salary ~ poly(age, 4, raw=TRUE))
+# fit third degree polynomial equation for mean and median:
+mean_fit <- lm(mean_salary ~ poly(age, 3, raw=TRUE))
+median_fit <- lm(median_salary ~ poly(age, 3, raw=TRUE))
+
+#generate range of 100 numbers starting from 0 and ending at 800
+xx <- seq(0, 800, length=100)
+plot(x=age, y=mean_salary, pch=19, ylim=c(0, 35000))
+lines(xx, predict(mean_fit, data.frame(age=xx)), col="orange")
 
 
-#generate range of 50 numbers starting from 30 and ending at 160
-xx <- seq(15, 55, length=100)
-plot(x=age, y=mean_salary, pch=19, ylim=c(0, 40000))
-lines(xx, predict(fit, data.frame(age=xx)), col="red")
-lines(xx, predict(fit2, data.frame(age=xx)), col="green")
-lines(xx, predict(fit3, data.frame(age=xx)), col="blue")
-lines(xx, predict(fit4, data.frame(age=xx)), col="purple")
+# same for median fit
+xx <- seq(0, 800, length=100)
+plot(x=age, y=median_salary, pch=19, ylim=c(0, 35000))
+lines(xx, predict(median_fit, data.frame(age=xx)), col="orange")
 
-summary(fit4)
+summary(median_fit)
 
 
 
 ##### Converting to a monthly salary schedule
-# from age 20 to 55
+# from age 19.5 to 54.5
 # Repayment countdown starts on April after finishing uni
 # For simplicity, I assume this starts at age 22.
 # This is only needed to know where on the curve to fit people.
@@ -107,10 +135,51 @@ summary(fit4)
 # Use resulting schedule as in the repayment simulator
 
 
+##### polynomial test
+# median
+x = 35
+y = -2.019e+05 + 2.289e+04*x -8.598e+02*x^2 + 1.443e+01 * x^3 + -9.074e-02*x^4
+
+#mean
+x = 35
+y = -2.089e+05 + 2.400e+04* x + -9.204e+02* (x^2) + 1.602e+01* (x^3) + -1.047e-01* (x^4)
+
+
+# While mean is arguably a better descriptor of the whole population, the median is a more typical case.
+# This is all filled with assumptions, so I will take median as my salary shedule shape.
+
+
+
+
+
+
+
+
+
+
+
+
 # Function defined in 'basic_functions_only'
 
 #  Run the function to make a salary schedule
 salary_schedule <- find_salary_schedule()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #### Discussion 
 
