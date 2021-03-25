@@ -1,5 +1,10 @@
 # set parameters and define inputs
 
+# Inputs: define specific conditions for some person.
+Starting_Debt <-  45000 # 45000
+Starting_Salary <- 3000 # 3000
+Months_Until_Writeoff = 360 # 360
+
 # parameters: define general conditions to do with the state of the world.
 # note: RPI = AVERAGE RPI, in the long run: not now.
 REPAYMENT_THRESHOLD <- 26575/12
@@ -8,12 +13,7 @@ MAX_INTEREST_THRESHOLD = 47835/12
 RPI = 0.026
 RPI_ADJUSTMENT <- 0.65
 
-# Inputs: define specific conditions for some person.
-Starting_Debt <-  43000 # 45000
-Starting_Salary <- 6000 # 3000
-Months_Until_Writeoff = 360 # 360
-
-# Advanced: prediction used in modeling salary trajectory
+# Depreciated: only used for old, inferior salary model
 Salary_Growth_Rate = 0.012
 
 
