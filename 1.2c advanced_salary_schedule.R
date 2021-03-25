@@ -42,11 +42,14 @@ median_fit <- lm(median_salary ~ poly(age, 4, raw=TRUE))
 mean_fit <- lm(mean_salary ~ poly(age, 4, raw=TRUE))
 
 
-xx <- seq(0, 800, length=100)
-plot(x=age, y=median_salary, pch=19, ylim=c(0, 3200))
-lines(xx, predict(median_fit, data.frame(age=xx)), col="orange")
+# xx <- seq(0, 800, length=100)
+# plot(x=age, y=median_salary, pch=19, ylim=c(0, 3200))
+# lines(xx, predict(median_fit, data.frame(age=xx)), col="orange")
 
-
+# library(ggplot2)
+# ggplot(ons_salaries, aes(x = age_months, y = month_median_salary)) +
+#   geom_point() +
+#   geom_line(xx)
 
 ###### Experimental salary schedule using coefficients derived from fitting lines through ASHE values.
 
@@ -56,7 +59,7 @@ find_salary_schedule <- function(starting_salary = Starting_Salary,
                                   B2 = as.numeric(median_fit$coefficients[3]),
                                   B3 = as.numeric(median_fit$coefficients[4]),
                                   B4 = as.numeric(median_fit$coefficients[5]),
-                                  starting_age_years = 23) {
+                                  starting_age_years = 22.5) {
   # for the shape of the curve, assume people start working + repaying when they turn 23 by default.
   # the only impact is on the shape of the curve / how high up their initial income climb they are when they come in.
   salary_schedule <- vector()
@@ -67,7 +70,7 @@ find_salary_schedule <- function(starting_salary = Starting_Salary,
   predicted_salary <- B0 + B1*starting_age + B2*starting_age^2 + B3*starting_age^3 + B4*starting_age^4
   salary_scalar <- starting_salary / predicted_salary
   
-  for (i in 1:360) {
+  for (i in 1:Months_Until_Writeoff+1) {
     salary <- salary_scalar * (B0 + B1*current_age + B2*current_age^2 + B3*current_age^3 + B4*current_age^4)
     
     salary_schedule <- c(salary_schedule, salary)
