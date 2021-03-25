@@ -6,11 +6,11 @@ REPAYMENT_THRESHOLD <- 26575/12
 MIN_INTEREST_THRESHOLD = 26575/12
 MAX_INTEREST_THRESHOLD = 47835/12
 RPI = 0.026
-RPI_ADJUSTMENT <- 0.75
+RPI_ADJUSTMENT <- 0.65
 
 # Inputs: define specific conditions for some person.
 Starting_Debt <-  43000 # 45000
-Starting_Salary <- 2600 # 3000
+Starting_Salary <- 6000 # 3000
 Months_Until_Writeoff = 360 # 360
 
 # Advanced: prediction used in modeling salary trajectory
