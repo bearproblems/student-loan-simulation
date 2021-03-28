@@ -34,7 +34,7 @@ Starting_Debt
 # total real repayments
 total_real_repayments <- sum(results$repayment_series)
 
-# total real repayments, as a proportion of Starting_Debt
+# Starting_Debt, as a proportion of total real repayments
 lump_sum_payment_proportion <- Starting_Debt / sum(results$repayment_series)
 
 ### 2. Starting_Debt - total real repayments.
